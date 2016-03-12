@@ -58,6 +58,15 @@
   </patternset>
   
   
+  <!-- Project Libraries -->
+  
+  <path id="library.lib.classpath">
+    <fileset dir="${basedir}/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  
   <!-- Application Server Libraries -->
   
   <!-- Modules -->
@@ -78,19 +87,24 @@
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
   
-  <path id="helloworld.module.production.classpath"/>
+  <path id="helloworld.module.production.classpath">
+    <path refid="library.lib.classpath"/>
+  </path>
   
   <path id="helloworld.runtime.production.module.classpath">
     <pathelement location="${helloworld.output.dir}"/>
+    <path refid="library.lib.classpath"/>
   </path>
   
   <path id="helloworld.module.classpath">
     <pathelement location="${helloworld.output.dir}"/>
+    <path refid="library.lib.classpath"/>
   </path>
   
   <path id="helloworld.runtime.module.classpath">
     <pathelement location="${helloworld.testoutput.dir}"/>
     <pathelement location="${helloworld.output.dir}"/>
+    <path refid="library.lib.classpath"/>
   </path>
   
   
@@ -105,6 +119,12 @@
   <path id="helloworld.module.sourcepath">
     <dirset dir="${module.helloworld.basedir}">
       <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="helloworld.module.test.sourcepath">
+    <dirset dir="${module.helloworld.basedir}">
+      <include name="test"/>
     </dirset>
   </path>
   
@@ -129,36 +149,47 @@
     </copy>
   </target>
   
-  <target name="compile.module.helloworld.tests" depends="compile.module.helloworld.production" description="compile module HelloWorld; test classes" unless="skip.tests"/>
+  <target name="compile.module.helloworld.tests" depends="compile.module.helloworld.production" description="compile module HelloWorld; test classes" unless="skip.tests">
+    <mkdir dir="${helloworld.testoutput.dir}"/>
+    <javac destdir="${helloworld.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.helloworld}"/>
+      <bootclasspath refid="helloworld.module.bootclasspath"/>
+      <classpath refid="helloworld.module.classpath"/>
+      <src refid="helloworld.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.helloworld"/>
+    </javac>
+    
+    <copy todir="${helloworld.testoutput.dir}">
+      <fileset dir="${module.helloworld.basedir}/test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+
+    <junit printsummary="yes" haltonfailure="yes">
+      <classpath>
+        <pathelement path="${helloworld.output.dir}"/>
+        <pathelement path="${helloworld.testoutput.dir}"/>
+        <pathelement path="${module.helloworld.basedir}/lib/junit-4.12.jar"/>
+      </classpath>
+
+      <formatter type="plain"/>
+
+      <batchtest fork="yes" todir="${helloworld.testoutput.dir}">
+        <fileset dir="${module.helloworld.basedir}/test">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+
+  </target>
   
   <target name="clean.module.helloworld" description="cleanup module">
     <delete dir="${helloworld.output.dir}"/>
     <delete dir="${helloworld.testoutput.dir}"/>
   </target>
-
-  <!-- hienpt9 add create jar file -->
-  <target name="jar" depends="compile.module.helloworld.production" description="Generate jar file">
-    <mkdir dir="${helloworld.output.dir}/jar"></mkdir>
-    <jar destfile="${helloworld.output.dir}/jar/hello.jar" basedir="${helloworld.output.dir}">
-      <manifest>
-        <attribute name="Main-Class" value="com.viettel.demo.Main" />
-      </manifest>
-    </jar>
-  </target>
-
-  <!-- hienpt9 add junit run -->
-  <target name="test">
-    <junit printsummary="yes" fork="yes" haltonfailure="yes">
-      <formatter type="plain"/>
-      <test name="com.viettel.demo.MainTest"/>
-    </junit>
-  </target>
-
-
-  <target name="run">
-    <java jar="${helloworld.output.dir}/jar/hello.jar" fork="true"/>
-  </target>
-
+  
   <target name="init" description="Build initialization">
     <!-- Perform any build initialization in this target -->
   </target>
@@ -167,5 +198,5 @@
   
   <target name="build.modules" depends="init, clean, compile.module.helloworld" description="build all modules"/>
   
-  <target name="all" depends="build.modules, jar, test, run" description="build all"/>
+  <target name="all" depends="build.modules" description="build all"/>
 </project>
