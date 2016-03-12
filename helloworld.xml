@@ -168,9 +168,9 @@
 
     <junit printsummary="yes" haltonfailure="yes">
       <classpath>
-        <pathelement path="${helloworld.output.dir}"/>
-        <pathelement path="${helloworld.testoutput.dir}"/>
-        <pathelement path="${module.helloworld.basedir}/lib/junit-4.12.jar"/>
+        <pathelement location="${helloworld.output.dir}"/>
+        <pathelement location="${helloworld.testoutput.dir}"/>
+        <pathelement location="${module.helloworld.basedir}/lib/junit-4.12.jar"/>
       </classpath>
 
       <formatter type="xml"/>
