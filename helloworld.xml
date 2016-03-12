@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="helloworld" default="all">
+  
+  
+  <property file="helloworld.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.tox/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.ear"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.swc"/>
+    <include name="*.ane"/>
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  
+  <!-- Application Server Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module HelloWorld -->
+  
+  <dirname property="module.helloworld.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.helloworld" value="-encoding UTF-8 -source 8 ${compiler.args}"/>
+  
+  <property name="helloworld.output.dir" value="${module.helloworld.basedir}/out/production/HelloWorld"/>
+  <property name="helloworld.testoutput.dir" value="${module.helloworld.basedir}/out/test/HelloWorld"/>
+  
+  <path id="helloworld.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="helloworld.module.production.classpath"/>
+  
+  <path id="helloworld.runtime.production.module.classpath">
+    <pathelement location="${helloworld.output.dir}"/>
+  </path>
+  
+  <path id="helloworld.module.classpath">
+    <pathelement location="${helloworld.output.dir}"/>
+  </path>
+  
+  <path id="helloworld.runtime.module.classpath">
+    <pathelement location="${helloworld.testoutput.dir}"/>
+    <pathelement location="${helloworld.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.helloworld">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.helloworld">
+    <patternset refid="excluded.from.module.helloworld"/>
+  </patternset>
+  
+  <path id="helloworld.module.sourcepath">
+    <dirset dir="${module.helloworld.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.helloworld" depends="compile.module.helloworld.production,compile.module.helloworld.tests" description="Compile module HelloWorld"/>
+  
+  <target name="compile.module.helloworld.production" description="Compile module HelloWorld; production classes">
+    <mkdir dir="${helloworld.output.dir}"/>
+    <javac destdir="${helloworld.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.helloworld}"/>
+      <bootclasspath refid="helloworld.module.bootclasspath"/>
+      <classpath refid="helloworld.module.production.classpath"/>
+      <src refid="helloworld.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.helloworld"/>
+    </javac>
+    
+    <copy todir="${helloworld.output.dir}">
+      <fileset dir="${module.helloworld.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.helloworld.tests" depends="compile.module.helloworld.production" description="compile module HelloWorld; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.helloworld" description="cleanup module">
+    <delete dir="${helloworld.output.dir}"/>
+    <delete dir="${helloworld.testoutput.dir}"/>
+  </target>
+
+  <target name="jar" depends="compile.module.helloworld.production" description="Generate jar file">
+    <mkdir dir="${helloworld.output.dir}/jar"></mkdir>
+    <jar destfile="${helloworld.output.dir}/jar/hello.jar" basedir="${helloworld.output.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="com.viettel.demo.Main" />
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run">
+    <java jar="${helloworld.output.dir}/jar/hello.jar" fork="true"/>
+  </target>
+
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.helloworld" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.helloworld" description="build all modules"/>
+  
+  <target name="all" depends="build.modules, jar, run" description="build all"/>
+</project>
