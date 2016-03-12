@@ -170,7 +170,10 @@
       <classpath>
         <pathelement location="${helloworld.output.dir}"/>
         <pathelement location="${helloworld.testoutput.dir}"/>
-        <pathelement location="${module.helloworld.basedir}/lib/junit-4.12.jar"/>
+        <!--<pathelement location="${module.helloworld.basedir}/lib/junit-4.12.jar"/>-->
+        <fileset dir="${module.helloworld.basedir}/lib">
+          <include name="*.jar"/>
+        </fileset>
       </classpath>
 
       <formatter type="xml"/>
