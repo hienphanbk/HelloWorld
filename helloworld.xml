@@ -136,6 +136,7 @@
     <delete dir="${helloworld.testoutput.dir}"/>
   </target>
 
+  <!-- hienpt9 add create jar file -->
   <target name="jar" depends="compile.module.helloworld.production" description="Generate jar file">
     <mkdir dir="${helloworld.output.dir}/jar"></mkdir>
     <jar destfile="${helloworld.output.dir}/jar/hello.jar" basedir="${helloworld.output.dir}">
@@ -144,6 +145,15 @@
       </manifest>
     </jar>
   </target>
+
+  <!-- hienpt9 add junit run -->
+  <target name="test">
+    <junit printsummary="yes" fork="yes" haltonfailure="yes">
+      <formatter type="plain"/>
+      <test name="com.viettel.demo.MainTest"/>
+    </junit>
+  </target>
+
 
   <target name="run">
     <java jar="${helloworld.output.dir}/jar/hello.jar" fork="true"/>
@@ -157,5 +167,5 @@
   
   <target name="build.modules" depends="init, clean, compile.module.helloworld" description="build all modules"/>
   
-  <target name="all" depends="build.modules, jar, run" description="build all"/>
+  <target name="all" depends="build.modules, jar, test, run" description="build all"/>
 </project>
