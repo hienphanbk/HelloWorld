@@ -12,6 +12,8 @@ public class MainTest extends TestCase {
 
     @Test
     public void testF2c() throws Exception {
+        System.out.println("Starting test ...");
         assertEquals(45.5, Main.f2c(62.5));
+        System.out.println("Test finished.");
     }
 }
