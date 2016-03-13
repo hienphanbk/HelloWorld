@@ -16,4 +16,6 @@ public class MainTest extends TestCase {
         assertEquals(45.5, Main.f2c(62.5));
         System.out.println("Test finished.");
     }
+
+
 }
