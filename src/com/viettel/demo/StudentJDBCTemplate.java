@@ -2,6 +2,7 @@ package com.viettel.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -9,10 +10,13 @@ import java.util.List;
 /**
  * Created by hienpt on 3/13/16.
  */
+@Component
 public class StudentJDBCTemplate implements StudentDAO {
+    @Autowired
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplateObject;
 
+    @Autowired
     @Override
     public void setDataSource(DataSource ds) {
         this.dataSource = ds;
