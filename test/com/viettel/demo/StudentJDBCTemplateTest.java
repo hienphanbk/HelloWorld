@@ -22,13 +22,6 @@ public class StudentJDBCTemplateTest {
     @Autowired
     StudentJDBCTemplate studentJDBCTemplate;
 
-    @Before
-    public void setUp() throws Exception {
-         //context = new ClassPathXmlApplicationContext("Beans.xml");
-         //studentJDBCTemplate = (StudentJDBCTemplate)context.getBean("studentJDBCTemplate");
-
-    }
-
     @Test
     public void testGetStudent() throws Exception {
         Student t = studentJDBCTemplate.getStudent(1);
@@ -38,7 +31,7 @@ public class StudentJDBCTemplateTest {
     @Test
     public void testListStudents() throws Exception {
        List<Student> students = studentJDBCTemplate.listStudents();
-       assertEquals(18, students.size());
+       assertEquals(30, students.size());
     }
 
     @Test

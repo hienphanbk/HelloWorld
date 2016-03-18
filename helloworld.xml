@@ -82,7 +82,8 @@
   
   <property name="helloworld.output.dir" value="${module.helloworld.basedir}/out/production/HelloWorld"/>
   <property name="helloworld.testoutput.dir" value="${module.helloworld.basedir}/out/test/HelloWorld"/>
-  
+  <property name="reports.tests" value="${module.helloworld.basedir}/out/testretport/"/>
+
   <path id="helloworld.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
@@ -165,27 +166,6 @@
         <type type="file"/>
       </fileset>
     </copy>
-
-    <junit printsummary="yes" haltonfailure="yes">
-      <classpath>
-        <pathelement location="${helloworld.output.dir}"/>
-        <pathelement location="${helloworld.testoutput.dir}"/>
-        <!--<pathelement location="${module.helloworld.basedir}/lib/junit-4.12.jar"/>-->
-        <fileset dir="${module.helloworld.basedir}/lib">
-          <include name="*.jar"/>
-        </fileset>
-      </classpath>
-
-      <formatter type="xml"/>
-
-      <batchtest fork="yes" todir="${module.helloworld.basedir}">
-        <fileset dir="${module.helloworld.basedir}/test">
-          <include name="**/*Test*.java"/>
-          <exclude name="**/AllTests.java"/>
-        </fileset>
-      </batchtest>
-    </junit>
-
   </target>
   
   <target name="clean.module.helloworld" description="cleanup module">
@@ -200,6 +180,29 @@
   <target name="clean" depends="clean.module.helloworld" description="cleanup all"/>
   
   <target name="build.modules" depends="init, clean, compile.module.helloworld" description="build all modules"/>
-  
-  <target name="all" depends="build.modules" description="build all"/>
+
+  <target name="test" depends="build.modules">
+    <delete dir="${reports.tests}"></delete>
+    <mkdir dir="${reports.tests}" />
+    <junit printsummary="yes" haltonfailure="no">
+      <classpath>
+        <fileset dir="${basedir}">
+          <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="${helloworld.testoutput.dir}"/>
+        <pathelement location="${helloworld.output.dir}"/>
+      </classpath>
+
+      <formatter type="plain"/>
+
+      <batchtest fork="yes" todir="${reports.tests}">
+        <fileset dir="${basedir}/test">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="all" depends="build.modules, test" description="build all"/>
 </project>

@@ -14,29 +14,6 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-//        ApplicationContext ctx =
-//                new AnnotationConfigApplicationContext(TextEditorConfig.class);
-//
-//        TextEditor te = ctx.getBean(TextEditor.class);
-//
-//        te.spellCheck();
-
-        /**
-         * TEST EVENT HANDLER
-         */
-//        ConfigurableApplicationContext context =
-//                new ClassPathXmlApplicationContext("Beans.xml");
-//
-//        // Let us raise a start event.
-//        context.start();
-//
-//        HelloWorld obj = (HelloWorld) context.getBean("helloWorld");
-//
-//        obj.getMessage();
-//
-//        // Let us raise a stop event.
-//        context.stop();
-
         /**
          * TEST JDBC TEMPLATE
          */
@@ -69,9 +46,4 @@ public class Main {
         System.out.println(", Age : " + student.getAge());
 
     }
-
-    static double f2c(double f) {
-        return f - 32 * 5 / 9;
-    }
-
 }
