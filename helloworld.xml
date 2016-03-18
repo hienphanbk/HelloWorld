@@ -186,9 +186,7 @@
     <mkdir dir="${reports.tests}" />
     <junit printsummary="yes" haltonfailure="no">
       <classpath>
-        <fileset dir="${basedir}">
-          <include name="**/*.jar"/>
-        </fileset>
+        <path refid="library.lib.classpath"/>
         <pathelement location="${helloworld.testoutput.dir}"/>
         <pathelement location="${helloworld.output.dir}"/>
       </classpath>
