@@ -82,7 +82,7 @@
   
   <property name="helloworld.output.dir" value="${module.helloworld.basedir}/out/production/HelloWorld"/>
   <property name="helloworld.testoutput.dir" value="${module.helloworld.basedir}/out/test/HelloWorld"/>
-  <property name="reports.tests" value="${module.helloworld.basedir}/out/testretport/"/>
+  <property name="reports.tests" value="${module.helloworld.basedir}/out/testreport/"/>
 
   <path id="helloworld.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
